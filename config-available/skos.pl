@@ -10,4 +10,7 @@ Prolog.
 
 :- rdf_register_ns(skos, 'http://www.w3.org/2004/02/skos/core#').
 :- rdf_attach_library(skos(rdf)).
+:- rdf_attach_library(cliopatria(rdf/base)).
 :- rdf_load_library(skos).
+:- rdf_load_library(owl).
+:- rdf_load_library(dcterms).
