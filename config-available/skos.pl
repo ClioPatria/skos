@@ -12,5 +12,6 @@ Prolog.
 :- rdf_attach_library(skos(rdf)).
 :- rdf_attach_library(cliopatria(rdf/base)).
 :- rdf_load_library(skos).
+:- rdf_load_library(skosxl).
 :- rdf_load_library(owl).
 :- rdf_load_library(dcterms).
