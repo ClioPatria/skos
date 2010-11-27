@@ -4,11 +4,17 @@
 @prefix    rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix	dcterms: <http://purl.org/dc/terms/> .
 @prefix	   skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix  skosxl: <http://www.w3.org/2008/05/skos-xl#> .
 
 :skos
 	a lib:Namespace ;
 	lib:mnemonic "skos" ;
 	lib:namespace skos: .
+
+:skosxl
+	a lib:Namespace ;
+	lib:mnemonic "skosxl" ;
+	lib:namespace skosxl: .
 
 <skos>
 	a lib:Schema ;
@@ -18,3 +24,12 @@
 	lib:source skos: ;
 	owl:imports <skos.rdf> ;
 	lib:providesNamespace :skos .
+
+<skosxl>
+	a lib:Schema ;
+	a lib:Virtual ;
+	dcterms:title "An RDF vocabulary extending SKOS and allowing the description and linking of lexical entities." ;
+	owl:versionInfo "18 August 2009 REC Edition" ;
+	lib:source skosxl: ;
+	owl:imports <skos-xl.rdf> ;
+	lib:providesNamespace :skosxl .
