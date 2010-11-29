@@ -104,17 +104,3 @@ skos_node_shape(URI, Shape, Options) :-
 node_shape(URI, Shape, Options) :-
 	memberchk(start(URI), Options),
 	Shape = [shape(tripleoctagon),style(filled),fillcolor('#ff85fd')].
-node_shape(URI, Shape, _Options) :-
-	rdf_has(URI, rdf:type, ens:'WebResource'),
-	page_content_type(URI, Type),
-	sub_atom(Type, 0, _, _, 'image/'),
-	Shape = [img([src(URI)])].
-node_shape(URI, Shape, _Options) :-
-	rdf_has(URI, rdf:type, ore:'Aggregation'),
-	Shape = [shape(box3d),style(filled),fillcolor('#85fff7')].
-node_shape(URI, Shape, _Options) :-
-	rdf_has(URI, rdf:type, ore:'Proxy'),
-	Shape = [shape(diamond),style('rounded,filled'),fillcolor('#ffb785')].
-node_shape(URI, Shape, _Options) :-
-	rdf_has(URI, rdf:type, ens:'PhysicalThing'),
-	Shape = [shape(house),style('filled'),fillcolor('#ff8585')].
