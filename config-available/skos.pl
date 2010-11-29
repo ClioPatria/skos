@@ -4,8 +4,8 @@
 
 This module provides hooks for showing SKOS entities
 */
-
 :- use_module(cliopatria(hooks)).
+:- use_module(library(semweb/rdfs)).
 :- use_module(library(skos_schema)).
 :- use_module(components(skos/components)).
 :- use_module(components(skos/graph)).
