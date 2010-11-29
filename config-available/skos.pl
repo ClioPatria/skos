@@ -1,26 +1,12 @@
 :- module(conf_skos, []).
-:- use_module(library(semweb/rdf_db)).
-:- use_module(library(semweb/rdf_library)).
-:- use_module(library(semweb/rdfs)).
-:- use_module(cliopatria(hooks)).
 
-/** <module> Provide SKOS schema, namespace and visualization hooks.
+/** <module> Provide SKOS visualization hooks.
 
-This module provides the SKOS schema and   the  prefix =skos= for use in
-Prolog.
+This module provides hooks for showing SKOS entities
 */
 
-:- rdf_register_ns(skos,   'http://www.w3.org/2004/02/skos/core#').
-:- rdf_register_ns(skosxl, 'http://www.w3.org/2008/05/skos-xl#').
-
-:- rdf_attach_library(skos(rdf)).
-:- rdf_attach_library(cliopatria(rdf/base)).
-
-:- rdf_load_library(skos).
-:- rdf_load_library(skosxl).
-:- rdf_load_library(owl).
-:- rdf_load_library(dcterms).
-
+:- use_module(cliopatria(hooks)).
+:- use_module(library(skos_schema)).
 :- use_module(components(skos/components)).
 :- use_module(components(skos/graph)).
 
