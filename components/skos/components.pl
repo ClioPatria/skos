@@ -33,7 +33,7 @@ skos_display_link(SKOSXL, Options) -->
 	},
         html(a([class(r_def), href(HREF)], ['xl: ', \turtle_label(Literal)])).
 
-%%	edm_proxy_view(+URI, +Options)// is det.
+%%	skos_proxy_view(+URI, +Options)// is det.
 %
 %	Provide a _|local view|_ for an EDM ore:Proxy object. The caller
 %	must ensure that URI is indeed of type ore:Proxy.
