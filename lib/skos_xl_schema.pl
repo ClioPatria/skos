@@ -1,5 +1,5 @@
 :- module(skos_xl_schema, []).
-:- use_module(library(skow_schema)).
+:- use_module(library(skos_schema)).
 :- use_module(library(semweb/rdf_library)).
 :- use_module(library(semweb/rdfs)).
 
