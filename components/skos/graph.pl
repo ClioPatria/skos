@@ -7,7 +7,6 @@
 :- use_module(library(semweb/rdf_db)).
 :- use_module(library(semweb/rdfs)).
 :- use_module(library(semweb/rdf_abstract)).
-:- use_module(library(http/page_info)).
 :- use_module(library(http/html_write)).
 :- use_module(library(lists)).
 :- use_module(components(label)).
