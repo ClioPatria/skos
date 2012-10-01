@@ -1,0 +1,27 @@
+# SKOS vocabularies
+@prefix void:    <http://rdfs.org/ns/void#> .
+@prefix vann:	 <http://purl.org/vocab/vann/> .
+@prefix lib:     <http://www.swi-prolog.org/rdf/library/> .
+@prefix owl:     <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:    <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:     <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix skos:    <http://www.w3.org/2004/02/skos/core#> .
+@prefix skosxl:  <http://www.w3.org/2008/05/skos-xl#> .
+
+[ vann:preferredNamespacePrefix "skos" ;
+  vann:preferredNamespaceUri "http://www.w3.org/2004/02/skos/core#"
+] .
+
+[ vann:preferredNamespacePrefix "skosxl" ;
+  vann:preferredNamespaceUri "http://www.w3.org/2008/05/skos-xl#"
+] .
+
+<skos>
+	a void:Dataset ;
+ 	dcterms:title "SKOS Simple Knowledge Organization System RDF Schema" ;
+	owl:versionInfo "18 August 2009 REC Edition" ;
+	lib:source <http://www.w3.org/2004/02/skos/core> ;
+	void:dataDump
+		<skos.rdf> .
