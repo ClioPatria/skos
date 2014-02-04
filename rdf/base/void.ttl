@@ -25,3 +25,10 @@
 	lib:source <http://www.w3.org/2004/02/skos/core> ;
 	void:dataDump
 		<skos.rdf> .
+<skosxl>
+	a void:Dataset ;
+ 	dcterms:title "An RDF vocabulary extending SKOS and allowing the description and linking of lexical entities." ;
+	owl:versionInfo "18 August 2009 REC Edition" ;
+	lib:source skosxl: ;
+	void:dataDump
+		<skos-xl.rdf> .
