@@ -14,6 +14,7 @@
 json_all_literal_propvalues(R,P,Definitions) :-
 	findall(Lang-Definition,
 		(   rdf_has(R, P, DefLit),
+		    rdf_is_literal(DefLit),
 		    literal_text(DefLit,Definition),
 		    (	DefLit = literal(lang(Lang, _))
 		    ->	true
