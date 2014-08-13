@@ -1,11 +1,22 @@
 :- module(skos_util, [
+	      skos_is_vocabulary/1,
 	      skos_notation_ish/2,
 	      skos_all_labels/2,
-	      skos_related_concepts/2
+	      skos_related_concepts/2,
+	      skos_parent_child/2
 	  ]).
 
 :- use_module(library('semweb/rdf_db')).
+:- use_module(library('semweb/rdfs')).
 :- use_module(library('semweb/rdf_label')).
+
+:- multifile
+	skos_is_vocabulary/1.
+
+%%	skos_is_vocabulary(+Voc) is semidet.
+%%	skos_is_vocabulary(-Voc) is nondet.
+skos_is_vocabulary(Voc) :-
+	rdfs_individual_of(Voc, skos:'ConceptScheme').
 
 %%	notation_ish(Concept, NotationIsh) is det.
 %
@@ -47,3 +58,14 @@ skos_related(R1, R2) :-
 	rdf_has(R1, skos:related, R2).
 skos_related(R2, R1) :-
 	rdf_has(R2, skos:related, R1).
+
+%%	skos_parent_child(?Parent, ?Child) is nondet.
+%
+%	Evaluates to true if Parent is a broader concept of Child,
+%	Child a narrower concept of Parent and Parent != Child.
+
+skos_parent_child(Parent, Child) :-
+	(   rdf_has(Child, skos:broader, Parent)
+	;   rdf_has(Parent, skos:narrower, Child)
+	),
+	Parent \= Child.
