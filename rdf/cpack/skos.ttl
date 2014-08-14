@@ -24,7 +24,8 @@
 	    ] ;
 	cpack:description
 
-"""The package description goes here.  You can use PlDoc Wiki markup.
+"""This package provides convienient loading of the skos and skos-xl RDF schemas.
+In addition, it proves a small prolog API to some frequent query patterns.
 """ .
 
 
