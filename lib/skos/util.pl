@@ -3,7 +3,9 @@
 	      skos_notation_ish/2,
 	      skos_all_labels/2,
 	      skos_related_concepts/2,
-	      skos_parent_child/2
+	      skos_parent_child/2,
+	      skos_descendant_of/2,
+	      skos_descendant_of/4
 	  ]).
 
 :- use_module(library('semweb/rdf_db')).
@@ -13,12 +15,20 @@
 :- multifile
 	skos_is_vocabulary/1.
 
+:- rdf_meta
+	skos_is_vocabulary(r),
+	skos_notation_ish(r, -),
+	skos_all_labels(r, -),
+	skos_related_concepts(r,-),
+	skos_parent_child(r,r),
+	skos_descendant_of(r,r).
+
 %%	skos_is_vocabulary(+Voc) is semidet.
 %%	skos_is_vocabulary(-Voc) is nondet.
 skos_is_vocabulary(Voc) :-
 	rdfs_individual_of(Voc, skos:'ConceptScheme').
 
-%%	notation_ish(Concept, NotationIsh) is det.
+%%	notation_ish(+Concept, -NotationIsh) is det.
 %
 %	Unify NotationIsh with a label extend by (notation).
 %	For notation, use the skos:notation or dc/dcterms:identifier
@@ -69,3 +79,29 @@ skos_parent_child(Parent, Child) :-
 	;   rdf_has(Parent, skos:narrower, Child)
 	),
 	Parent \= Child.
+
+%%	skos_descendant_of(+Concept, -Descendant) is semidet.
+%
+%	Descendent is a direct or indirect descendant of Concept.
+
+skos_descendant_of(Concept, D) :-
+	rdf_reachable(D, skos:broader, Concept),
+	\+ D = Concept.
+skos_descendant_of(Concept, D) :-
+	rdf_reachable(Concept, skos:narrower, D),
+	\+ D = Concept,
+	\+ rdf_reachable(D, skos:broader, Concept).
+
+%%	skos_descendant_of(+Concept, Descendent, MaxSteps, Steps) is
+%	semidet.
+%
+%	Descendent is a direct or indirect descendent of Concept in
+%	Steps steps.
+
+skos_descendant_of(Concept, D, MaxSteps, Steps) :-
+	rdf_reachable(D, skos:broader, Concept, MaxSteps, Steps),
+	\+ D = Concept.
+skos_descendant_of(Concept, D, MaxSteps, Steps) :-
+	rdf_reachable(Concept, skos:narrower, D, MaxSteps, Steps),
+	\+ D = Concept,
+	\+ rdf_reachable(D, skos:broader, Concept, MaxSteps, Steps).
