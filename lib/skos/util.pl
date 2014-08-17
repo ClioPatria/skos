@@ -1,11 +1,13 @@
 :- module(skos_util, [
+	      skos_all_labels/2,
+	      skos_descendant_of/2,
+	      skos_descendant_of/4,
+	      skos_in_scheme/2,
 	      skos_is_vocabulary/1,
 	      skos_notation_ish/2,
-	      skos_all_labels/2,
-	      skos_related_concepts/2,
 	      skos_parent_child/2,
-	      skos_descendant_of/2,
-	      skos_descendant_of/4
+	      skos_related_concept/2,
+	      skos_top_concept/2
 	  ]).
 
 :- use_module(library('semweb/rdf_db')).
@@ -16,10 +18,11 @@
 	skos_is_vocabulary/1.
 
 :- rdf_meta
+	skos_in_scheme(r,r),
 	skos_is_vocabulary(r),
 	skos_notation_ish(r, -),
 	skos_all_labels(r, -),
-	skos_related_concepts(r,-),
+	skos_related_concept(r,-),
 	skos_parent_child(r,r),
 	skos_descendant_of(r,r).
 
@@ -56,18 +59,15 @@ skos_all_labels(R,Labels) :-
 	sort(Labels0,Labels).
 
 
-%%	skos_related_concepts(?Resource, ?Concepts) is det.
+%%	skos_related_concept(?Concept, ?Related) is nondet.
 %
-%	Related Concepts are linked by skos:related to Resource.
+%	Concept and Related are related by skos:related or vice versa.
 
-skos_related_concepts(S, Rs) :-
-	findall(R, skos_related(S, R), Rs0),
-	sort(Rs0, Rs).
-
-skos_related(R1, R2) :-
+skos_related_concept(R1, R2) :-
 	rdf_has(R1, skos:related, R2).
-skos_related(R2, R1) :-
-	rdf_has(R2, skos:related, R1).
+skos_related_concept(R2, R1) :-
+	rdf_has(R2, skos:related, R1),
+	\+ rdf_has(R1, skos:related, R2).
 
 %%	skos_parent_child(?Parent, ?Child) is nondet.
 %
@@ -105,3 +105,24 @@ skos_descendant_of(Concept, D, MaxSteps, Steps) :-
 	rdf_reachable(Concept, skos:narrower, D, MaxSteps, Steps),
 	\+ D = Concept,
 	\+ rdf_reachable(D, skos:broader, Concept, MaxSteps, Steps).
+
+
+%%	skos_in_scheme(+ConceptScheme, -Concept) is nondet.
+%
+%	True if Concept is contained in a skos:ConceptScheme by
+%	skos:inScheme.
+
+skos_in_scheme(ConceptScheme, Concept) :-
+	rdf(Concept, skos:inScheme, ConceptScheme).
+
+
+%%	skos_top_concept(+ConceptScheme, -Concept) is nondet.
+%
+%	True if Concept is a skos:hasTopConcept of ConceptScheme, or
+%	inversely by skos:topConceptOf
+
+skos_top_concept(ConceptScheme, Concept) :-
+	rdf(ConceptScheme, skos:hasTopConcept, Concept).
+skos_top_concept(ConceptScheme, Concept) :-
+	rdf(Concept, skos:topConceptOf, ConceptScheme),
+	\+ rdf(ConceptScheme, skos:hasTopConcept, Concept).
