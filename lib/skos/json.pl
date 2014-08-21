@@ -1,8 +1,9 @@
 :- module(skos_json, [
 	      json_all_literal_propvalues/3]).
 
-:- use_module(library('semweb/rdf_db')).
-:- use_module(library('semweb/rdf_label')).
+:- use_module(library(pairs)).
+:- use_module(library(semweb/rdf_db)).
+:- use_module(library(semweb/rdf_label)).
 
 :- rdf_meta
 	json_all_literal_propvalues(r, r, -).
@@ -21,4 +22,5 @@ json_all_literal_propvalues(R,P,Definitions) :-
 		    ;	Lang=lang_undefined
 		    )
 		), Pairs),
-	dict_pairs(Definitions, lang, Pairs).
+	group_pairs_by_key(Pairs, Grouped),
+	dict_pairs(Definitions, lang,  Grouped).
