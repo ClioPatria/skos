@@ -22,5 +22,6 @@ json_all_literal_propvalues(R,P,Definitions) :-
 		    ;	Lang=lang_undefined
 		    )
 		), Pairs),
-	group_pairs_by_key(Pairs, Grouped),
+	keysort(Pairs, Sorted),
+	group_pairs_by_key(Sorted, Grouped),
 	dict_pairs(Definitions, lang,  Grouped).
