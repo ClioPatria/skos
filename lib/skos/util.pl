@@ -1,13 +1,20 @@
 :- module(skos_util, [
+	      % get info from skos
 	      skos_all_labels/2,
 	      skos_descendant_of/2,
 	      skos_descendant_of/4,
+	      skos_related_to/4,
 	      skos_in_scheme/2,
+	      skos_in_scheme/3,
 	      skos_is_vocabulary/1,
 	      skos_notation_ish/2,
 	      skos_parent_child/2,
 	      skos_related_concept/2,
-	      skos_top_concept/2
+	      skos_top_concept/2,
+
+	      % create skos:
+	      skos_add_to_scheme/3,
+	      skos_assert_scheme/2
 	  ]).
 
 :- use_module(library('semweb/rdf_db')).
@@ -92,7 +99,7 @@ skos_descendant_of(Concept, D) :-
 	\+ D = Concept,
 	\+ rdf_reachable(D, skos:broader, Concept).
 
-%%	skos_descendant_of(+Concept, Descendent, MaxSteps, Steps) is
+%%	skos_descendant_of(+Concept, -Descendent, +MaxSteps, -Steps) is
 %	semidet.
 %
 %	Descendent is a direct or indirect descendent of Concept in
@@ -107,14 +114,35 @@ skos_descendant_of(Concept, D, MaxSteps, Steps) :-
 	\+ rdf_reachable(D, skos:broader, Concept, MaxSteps, Steps).
 
 
-%%	skos_in_scheme(+ConceptScheme, -Concept) is nondet.
+%%	skos_related_to(+Concept, -Related, +MaxSteps, -Steps) is
+%	semidet.
+%
+%	Related is directly or indirectly related to Concept in
+%	Steps steps.
+
+skos_related_to(Concept, R, MaxSteps, Steps) :-
+	rdf_reachable(R, skos:related, Concept, MaxSteps, Steps),
+	\+ R = Concept.
+skos_related_to(Concept, R, MaxSteps, Steps) :-
+	rdf_reachable(Concept, skos:related, R, MaxSteps, Steps),
+	\+ R = Concept,
+	\+ rdf_reachable(R, skos:related, Concept, MaxSteps, Steps).
+
+%%	skos_in_scheme(?ConceptScheme, ?Concept) is nondet.
 %
 %	True if Concept is contained in a skos:ConceptScheme by
 %	skos:inScheme.
 
 skos_in_scheme(ConceptScheme, Concept) :-
-	rdf(Concept, skos:inScheme, ConceptScheme).
+	skos_in_scheme(ConceptScheme, Concept, _Graph).
 
+%%	skos_in_scheme(?ConceptScheme, ?Concept, ?Graph) is nondet.
+%
+%	True if Concept is defined to be in a skos:ConceptScheme by
+%	a skos:inScheme triple in named graph Graph.
+%
+skos_in_scheme(ConceptScheme, Concept, Graph) :-
+	rdf(Concept, skos:inScheme, ConceptScheme, Graph).
 
 %%	skos_top_concept(+ConceptScheme, -Concept) is nondet.
 %
@@ -126,3 +154,21 @@ skos_top_concept(ConceptScheme, Concept) :-
 skos_top_concept(ConceptScheme, Concept) :-
 	rdf(Concept, skos:topConceptOf, ConceptScheme),
 	\+ rdf(ConceptScheme, skos:hasTopConcept, Concept).
+
+
+%%	skos_add_to_scheme(+Concept, +Scheme, +Graph) is det.
+%
+%	Add skos:inScheme triple to graph if Concept not already in
+%	Scheme. Succeeds silently if this is already the case.
+skos_add_to_scheme(Concept, ConceptScheme, Graph) :-
+	skos_in_scheme(ConceptScheme, Concept, Graph),
+	!.
+skos_add_to_scheme(R, Scheme, Graph) :-
+	rdf_assert(R, skos:inScheme, Scheme, Graph).
+
+%%	skos_assert_scheme(+Scheme, +Graph) is det.
+%
+%	Assert that Scheme is of type ConcertScheme in named graph
+%	Graph.
+skos_assert_scheme(Scheme, Graph) :-
+	rdf_assert(Scheme, rdf:type, skos:'ConceptScheme', Graph).
