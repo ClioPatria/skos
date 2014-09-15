@@ -12,14 +12,17 @@
 	      skos_related_concept/2,
 	      skos_top_concept/2,
 
+	      skos_match/5,
+
 	      % create skos:
 	      skos_add_to_scheme/3,
 	      skos_assert_scheme/2
 	  ]).
 
-:- use_module(library('semweb/rdf_db')).
-:- use_module(library('semweb/rdfs')).
-:- use_module(library('semweb/rdf_label')).
+:- use_module(library(option)).
+:- use_module(library(semweb/rdf_db)).
+:- use_module(library(semweb/rdfs)).
+:- use_module(library(semweb/rdf_label)).
 
 :- multifile
 	skos_is_vocabulary/1.
@@ -29,6 +32,7 @@
 	skos_is_vocabulary(r),
 	skos_notation_ish(r, -),
 	skos_all_labels(r, -),
+	skos_match(r,r,-,r,+),
 	skos_related_concept(r,-),
 	skos_parent_child(r,r),
 	skos_descendant_of(r,r).
@@ -172,3 +176,42 @@ skos_add_to_scheme(R, Scheme, Graph) :-
 %	Graph.
 skos_assert_scheme(Scheme, Graph) :-
 	rdf_assert(Scheme, rdf:type, skos:'ConceptScheme', Graph).
+
+
+%%	skos_match(Concept, Prop, Lit, RealProp) is nondet.
+%
+%	Like rdf_has(Concept, Prop, Lit, RealProp), but skosxl-aware.
+%
+%	Match literal Lit to Concept a la:
+%       * plain rdf_has (skos),
+%	* via literal object (skosxl)
+%	** via amalgame:term if literal objects as amalgame:qualifier
+%	** via skosxl:literalForm if no amalgame:qualifier
+
+skos_match(Concept, MatchProp, Literal, RealProp, Options) :-
+	option(format(skos), Options, skos),
+	rdf_has(Concept, MatchProp, Literal, RealProp).
+
+skos_match(Concept, MatchProp, Literal, RealProp, Options) :-
+	nonvar(Concept),
+	option(format(skosxl), Options, skosxl),
+	rdf_has(Concept, MatchProp, LiteralObject, RealProp),
+	rdf_subject(LiteralObject),
+	(   ( rdf_has(LiteralObject, amalgame:qualifier, _),
+	      option(match_qualified_only(true), Options, false)
+            )
+	->  rdf_has(LiteralObject, amalgame:term, Literal)
+	;   rdf_has(LiteralObject, skosxl:literalForm, Literal)
+	).
+
+skos_match(Concept, MatchProp, Literal, RealProp, Options) :-
+	var(Concept),
+	option(format(skosxl), Options, skosxl),
+	(   ( option(match_qualified_only(true), Options, false),
+	      rdf_has(_, amalgame:term, Literal)
+	    )
+	->  rdf_has(LiteralObject, amalgame:term, Literal)
+	;   rdf_has(LiteralObject, skosxl:literalForm, Literal)
+	),
+	rdf_has(Concept, MatchProp, LiteralObject, RealProp),
+	true.
