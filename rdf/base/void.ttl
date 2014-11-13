@@ -18,16 +18,19 @@
   vann:preferredNamespaceUri "http://www.w3.org/2008/05/skos-xl#"
 ] .
 
+[ vann:preferredNamespacePrefix "amalgame";
+  vann:preferredNamespaceUri "http://purl.org/vocabularies/amalgame#" ] .
+
 <skos>
 	a void:Dataset ;
- 	dcterms:title "SKOS Simple Knowledge Organization System RDF Schema" ;
+	dcterms:title "SKOS Simple Knowledge Organization System RDF Schema" ;
 	owl:versionInfo "18 August 2009 REC Edition" ;
 	lib:source <http://www.w3.org/2004/02/skos/core> ;
 	void:dataDump
 		<skos.rdf> .
 <skosxl>
 	a void:Dataset ;
- 	dcterms:title "An RDF vocabulary extending SKOS and allowing the description and linking of lexical entities." ;
+	dcterms:title "An RDF vocabulary extending SKOS and allowing the description and linking of lexical entities." ;
 	owl:versionInfo "18 August 2009 REC Edition" ;
 	lib:source skosxl: ;
 	void:dataDump
