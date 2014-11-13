@@ -178,7 +178,7 @@ skos_assert_scheme(Scheme, Graph) :-
 	rdf_assert(Scheme, rdf:type, skos:'ConceptScheme', Graph).
 
 
-%%	skos_match(Concept, Prop, Lit, RealProp) is nondet.
+%%	skos_match(Concept, Prop, Lit, RealProp, Options) is nondet.
 %
 %	Like rdf_has(Concept, Prop, Lit, RealProp), but skosxl-aware.
 %
