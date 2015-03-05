@@ -25,6 +25,8 @@
 :- use_module(library(semweb/rdf_label)).
 
 :- multifile
+	skos_in_scheme/2,
+	skos_in_scheme/3,
 	skos_is_vocabulary/1.
 
 :- rdf_meta
